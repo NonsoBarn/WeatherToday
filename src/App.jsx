@@ -59,8 +59,6 @@ function App() {
       setName(getName);
       setLat(getLat);
       setLon(getLon);
-
-     
     };
     getlatlon();
   }, [city]);
@@ -116,8 +114,6 @@ function App() {
       setFeelslike(getFeelsLike);
       setTimezone(getTimezone);
 
-      
-
       setDt(formatToLocalTime(getDt, timezone, "ccc, LLLL dd "));
 
       setSunset(formatToLocalTime(getSunset, timezone, "hh:mm"));
@@ -149,7 +145,7 @@ function App() {
 
   return (
     <section className="flex items-center justify-center h-screen">
-      <div className="App bg-white shadow-2xl h-[82%]  max-w-sm md:h-[75%]  px-5">
+      <div className="App bg-white shadow-2xl   max-w-sm max-h-fit  px-5">
         <Navbar />
         <Search city={city} setCity={setCity} setLat={setLat} setLon={setLon} />
 
