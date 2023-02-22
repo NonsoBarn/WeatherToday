@@ -9,12 +9,15 @@ import Weatherforecast from "./components/HomeSections/Weatherforecast";
 import Weatherticker from "./components/HomeSections/WeatherTicker";
 import Navbar from "./components/Navbar";
 import Search from "./components/Search";
+import Error from "./components/Error";
+import Default from "./components/Default";
 
 function App() {
   const API_KEY = "f94335ea06decd3b61b083a68fafcfbf";
-  const [city, setCity] = useState("abuja");
-  const [lat, setLat] = useState("9.0574");
-  const [lon, setLon] = useState("7.4898");
+  const [error, setError] = useState(true);
+  const [city, setCity] = useState("");
+  const [lat, setLat] = useState("");
+  const [lon, setLon] = useState("");
 
   const [dailyForecast, setDailyForecast] = useState("");
   const [hourlyForecast, setHourlyForecast] = useState("");
@@ -46,22 +49,31 @@ function App() {
 
   useEffect(() => {
     const getlatlon = async () => {
-      const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`
-      );
+      const response = await axios
+        .get(
+          `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`
+        )
+        .then((response) => {
+          const getLat = response.data.coord.lat;
+          const getLon = response.data.coord.lon;
+          const getName = response.data.name;
+          const getCountry = response.data.sys.country;
 
-      const getLat = response.data.coord.lat;
-      const getLon = response.data.coord.lon;
-      const getName = response.data.name;
-      const getCountry = response.data.sys.country;
+          setCountry(getCountry);
+          setName(getName);
+          setLat(getLat);
+          setLon(getLon);
 
-      setCountry(getCountry);
-      setName(getName);
-      setLat(getLat);
-      setLon(getLon);
+          setError(false);
+        })
+        .catch((error) => {
+          setError(true);
+        });
     };
     getlatlon();
   }, [city]);
+
+  console.log(error);
 
   useEffect(() => {
     const getTempMinMax = async () => {
@@ -148,32 +160,41 @@ function App() {
       <div className="App bg-white shadow-2xl   max-w-sm max-h-fit  px-5">
         <Navbar />
         <Search city={city} setCity={setCity} setLat={setLat} setLon={setLon} />
-
-        <div className="max-w-full rounded overflow-hidden p-2 ">
-          <Weather
-            country={country}
-            details={details}
-            name={name}
-            temp={temp}
-            feelslike={feelslike}
-            dt={dt}
-            icon={icon}
-            units={units}
-            setUnits={setUnits}
-          />
-          <Weatherticker
-            sunset={sunset}
-            sunrise={sunrise}
-            tempmin={tempmin}
-            tempmax={tempmax}
-            humidity={humidity}
-            windspeed={windspeed}
-          />
-          <Weatherforecast
-            hourlyForecast={hourlyForecast}
-            dailyForecast={dailyForecast}
-          />
-        </div>
+        {city === "" ? (
+          <Default />
+        ) : (
+          <>
+            {error === false ? (
+              <div className="max-w-full rounded overflow-hidden p-2 ">
+                <Weather
+                  country={country}
+                  details={details}
+                  name={name}
+                  temp={temp}
+                  feelslike={feelslike}
+                  dt={dt}
+                  icon={icon}
+                  units={units}
+                  setUnits={setUnits}
+                />
+                <Weatherticker
+                  sunset={sunset}
+                  sunrise={sunrise}
+                  tempmin={tempmin}
+                  tempmax={tempmax}
+                  humidity={humidity}
+                  windspeed={windspeed}
+                />
+                <Weatherforecast
+                  hourlyForecast={hourlyForecast}
+                  dailyForecast={dailyForecast}
+                />
+              </div>
+            ) : (
+              <Error />
+            )}
+          </>
+        )}
       </div>
     </section>
   );

@@ -39,7 +39,7 @@ const Search = ({ setCity, city }) => {
         <div className="mb-3 mt-4 w-80 flex items-center justify-center">
           <input
             type="search"
-            className="form-control block w-80 px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border-r border-t border-gray-200 rounded  m-0 focus:text-gray-700 focus:bg-white focus:border-gray-300 focus:outline-none
+            className="form-control block w-80 px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-gray-200 rounded  m-0 focus:text-gray-700 focus:bg-white focus:border-gray-300 focus:outline-none
       "
             value={cityInput}
             id="Search"
